@@ -1,6 +1,20 @@
 {
-    "composer/package-versions-deprecated": {
-        "version": "1.11.99.1"
+    "api-platform/api-pack": {
+        "version": "v1.3.0"
+    },
+    "api-platform/core": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "a93061567140e386f107be75340ac2aee3f86cbf"
+        },
+        "files": [
+            "config/packages/api_platform.yaml",
+            "config/routes/api_platform.yaml",
+            "src/Entity/.gitignore"
+        ]
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -99,6 +113,9 @@
     "fakerphp/faker": {
         "version": "v1.13.0"
     },
+    "fig/link-util": {
+        "version": "1.1.2"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
@@ -113,6 +130,18 @@
     },
     "monolog/monolog": {
         "version": "1.26.0"
+    },
+    "nelmio/cors-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
     },
     "nikic/php-parser": {
         "version": "v4.10.4"
@@ -133,7 +162,7 @@
         "version": "1.0.0"
     },
     "psr/link": {
-        "version": "1.0.0"
+        "version": "1.1.0"
     },
     "psr/log": {
         "version": "1.1.3"
@@ -198,9 +227,6 @@
         "files": [
             "config/packages/dev/debug.yaml"
         ]
-    },
-    "symfony/debug-pack": {
-        "version": "v1.0.9"
     },
     "symfony/dependency-injection": {
         "version": "v4.4.19"
@@ -376,9 +402,6 @@
     "symfony/process": {
         "version": "v4.4.19"
     },
-    "symfony/profiler-pack": {
-        "version": "v1.0.5"
-    },
     "symfony/property-access": {
         "version": "v4.4.19"
     },
@@ -438,9 +461,6 @@
     "symfony/stopwatch": {
         "version": "v4.4.19"
     },
-    "symfony/test-pack": {
-        "version": "v1.0.7"
-    },
     "symfony/translation": {
         "version": "3.3",
         "recipe": {
@@ -473,9 +493,6 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
-    },
-    "symfony/twig-pack": {
-        "version": "v1.0.1"
     },
     "symfony/validator": {
         "version": "4.3",
@@ -524,5 +541,8 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "willdurand/negotiation": {
+        "version": "3.0.0"
     }
 }
