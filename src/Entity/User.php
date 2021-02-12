@@ -10,11 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"user_read"}},
+ *     denormalizationContext={"groups"={"user_write"}}
+ * )
  * @UniqueEntity("email", message="Un utilisateur existe déjà avec cette adresse Email")
  */
 class User implements UserInterface
@@ -23,13 +27,13 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "user_read", "user_write"})
      * @Assert\NotBlank(message="L'adresse Email est obligatoire")
      * @Assert\Email(message="L'adresse Email doit être valide", mode="strict")
      */
@@ -43,14 +47,21 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
-     * @Assert\Length(min="8", minMessage="Le mot de passe doit faire au minimum 8 caractères")
      */
     private $password;
 
     /**
+     * @var string|null
+     * @Groups({"user_write"})
+     * @SerializedName("password")
+     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
+     * @Assert\Length(min="8", minMessage="Le mot de passe doit faire au minimum 8 caractères")
+     */
+    private ?string $plainPassword = null;
+
+    /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "user_read", "user_write"})
      * @Assert\NotBlank(message="Le prénom est obligatoire")
      * @Assert\Length(min="2")
      */
@@ -58,7 +69,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Groups({"customers_read", "invoices_read", "invoices_subresource", "user_read", "user_write"})
      * @Assert\NotBlank(message="Le nom de famille est obligatoire")
      * @Assert\Length(min="2")
      */
@@ -149,10 +160,10 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): self
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
+        return $this;
     }
 
     public function getFirstName(): ?string
@@ -206,6 +217,20 @@ class User implements UserInterface
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
         return $this;
     }
 }
