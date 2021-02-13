@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Invoice;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,21 @@ class InvoiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Invoice::class);
     }
 
-    // /**
-    //  * @return Invoice[] Returns an array of Invoice objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findNextChrono(User $user): ?int
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        try {
+            $nextChrono = $this->createQueryBuilder('i')
+                    ->select('i.chrono')
+                    ->join('i.customer', 'c')
+                    ->where('c.user = :user')
+                    ->setParameter('user', $user)
+                    ->orderBy('i.chrono', 'desc')
+                    ->setMaxResults(1)
+                    ->getQuery()
+                    ->getSingleScalarResult() + 1;
+        } catch (\Exception $e) {
+            $nextChrono = 1;
+        }
+        return $nextChrono;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Invoice
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

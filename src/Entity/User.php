@@ -46,18 +46,12 @@ class User implements UserInterface
 
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
-    private $password;
-
-    /**
-     * @var string|null
      * @Groups({"user_write"})
-     * @SerializedName("password")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank(message="Le mot de passe est obligatoire")
      * @Assert\Length(min="8", minMessage="Le mot de passe doit faire au minimum 8 caractères")
      */
-    private ?string $plainPassword = null;
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -160,10 +154,9 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials(): self
+    public function eraseCredentials(): void
     {
-        $this->plainPassword = null;
-        return $this;
+        //$this->plainPassword = null;
     }
 
     public function getFirstName(): ?string
@@ -217,20 +210,6 @@ class User implements UserInterface
             }
         }
 
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(string $plainPassword): self
-    {
-        $this->plainPassword = $plainPassword;
         return $this;
     }
 }

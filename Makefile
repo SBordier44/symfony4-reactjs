@@ -1,6 +1,6 @@
 .PHONY: console
 console: bin
-	php7.4 bin/console
+	php7.4 bin/console $(filter-out $@,$(MAKECMDGOALS))
 
 .PHONY: update
 update:
@@ -8,7 +8,7 @@ update:
 
 .PHONY: require
 require:
-	php7.4 /usr/local/bin/composer require
+	php7.4 /usr/local/bin/composer require $(filter-out $@,$(MAKECMDGOALS))
 
 .PHONY: prepare-dev
 prepare-dev: bin

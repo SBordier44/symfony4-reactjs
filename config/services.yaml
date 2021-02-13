@@ -31,3 +31,11 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Serializer\DateTimeNormalizerPatch:
         tags: [ serializer.normalizer ]
+
+    App\Event\JwtCreatedListener:
+        tags:
+            - {
+                name: kernel.event_listener,
+                event: lexik_jwt_authentication.on_jwt_created,
+                method: updateJwtData
+            }
