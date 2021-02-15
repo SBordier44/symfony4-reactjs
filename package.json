@@ -1,0 +1,29 @@
+{
+  "devDependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "@symfony/webpack-encore": "^1.1",
+    "core-js": "^3.8",
+    "regenerator-runtime": "^0.13",
+    "sass": "^1.32.7",
+    "sass-loader": "^11.0.1",
+    "webpack-notifier": "^1.13"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev-server": "encore dev-server --hot",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "bootswatch": "^4.6.0",
+    "install": "^0.13.0",
+    "moment": "^2.29.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0"
+  }
+}
