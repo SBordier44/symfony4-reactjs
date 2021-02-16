@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Pagination from "../components/Pagination";
 import customersAPI from "../services/customersAPI";
+import {Link, NavLink} from "react-router-dom";
 
 const CustomersPage = props => {
 
@@ -57,7 +58,10 @@ const CustomersPage = props => {
 
     return (
         <>
-            <h1>Liste des clients</h1>
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <h1>Liste des clients</h1>
+                <Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
+            </div>
             <div className="form-group">
                 <input type="text" className="form-control" placeholder="Rechercher..." onChange={handleSearch}
                        value={search}/>
@@ -78,7 +82,7 @@ const CustomersPage = props => {
                 {paginatedCustomers.map(customer => <tr key={customer.id}>
                     <td>{customer.id}</td>
                     <td>
-                        <a href="#">{customer.firstName} {customer.lastName}</a>
+                        <NavLink to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</NavLink>
                     </td>
                     <td>{customer.email}</td>
                     <td>{customer.company}</td>

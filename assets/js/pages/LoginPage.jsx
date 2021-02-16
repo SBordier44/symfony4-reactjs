@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {Redirect} from 'react-router-dom'
 import authAPI from "../services/authAPI";
 import AuthContext from "../contexts/AuthContext";
+import Field from "../components/forms/Field";
 
 const LoginPage = ({history}) => {
 
@@ -38,21 +39,23 @@ const LoginPage = ({history}) => {
             {isAuthenticated && <Redirect to="/customers"/>}
             <h1>Connexion à l'application</h1>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse Email</label>
-                    <input type="email" className={"form-control" + (error && " is-invalid")}
-                           placeholder="Adresse Email de connexion"
-                           name="username" id="username" value={credentials.username} onChange={handleChangeField}
-                           required/>
-                    {error && <p className="invalid-feedback">
-                        {error}
-                    </p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" className="form-control" placeholder="Votre mot de passe" name="password"
-                           id="password" onChange={handleChangeField} required/>
-                </div>
+                <Field name="username"
+                       value={credentials.username}
+                       label="Adresse Email"
+                       placeholder="Adresse Email de connexion"
+                       type="email"
+                       onChange={handleChangeField}
+                       error={error}
+                       required={false}
+                />
+                <Field name="password"
+                       label="Mot de passe"
+                       placeholder="Votre mot de passe"
+                       type="password"
+                       onChange={handleChangeField}
+                       value={credentials.password}
+                       required={true}
+                />
                 <div className="div form-group">
                     <button className="btn btn-success" type="submit">
                         Connexion
