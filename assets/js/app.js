@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
-import {HashRouter, Route, Switch, withRouter} from "react-router-dom";
-
+import {HashRouter, Route, Switch, withRouter} from "react-router-dom"
 import '../scss/app.scss'
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
@@ -13,6 +12,7 @@ import authAPI from "./services/authAPI";
 import AuthContext from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import CustomerPage from "./pages/CustomerPage";
+import InvoicePage from "./pages/InvoicePage";
 
 authAPI.setup()
 
@@ -32,6 +32,7 @@ const App = () => {
                 <main className="container pt-5">
                     <Switch>
                         <Route path="/login" component={LoginPage}/>
+                        <PrivateRoute path="/invoices/:id" component={InvoicePage}/>
                         <PrivateRoute path="/invoices" component={InvoicesPage}/>
                         <PrivateRoute path="/customers/:id" component={CustomerPage}/>
                         <PrivateRoute path="/customers" component={CustomersPage}/>

@@ -11,15 +11,14 @@ const CustomersPage = props => {
 
     const fetchCustomers = async () => {
         try {
-            const data = await customersAPI.findAll()
-            setCustomers(data)
+            setCustomers(await customersAPI.findAll())
         } catch (error) {
             console.log(error.response)
         }
     }
 
     useEffect(() => {
-        return fetchCustomers();
+        fetchCustomers();
     }, []);
 
     const handleDelete = async id => {
@@ -52,6 +51,7 @@ const CustomersPage = props => {
         || c.lastName.toLowerCase().includes(search.toLowerCase())
         || c.email.toLowerCase().includes(search.toLowerCase())
         || (c.company && c.company.toLowerCase().includes(search.toLowerCase()))
+        || (c.user.email && c.user.email.toLowerCase().includes(search.toLowerCase()))
     )
 
     const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage)
@@ -71,6 +71,7 @@ const CustomersPage = props => {
                 <tr>
                     <th>Id</th>
                     <th>Client</th>
+                    <th>Proprietaire</th>
                     <th>Email</th>
                     <th>Entreprise</th>
                     <th className="text-center">Factures</th>
@@ -81,9 +82,8 @@ const CustomersPage = props => {
                 <tbody>
                 {paginatedCustomers.map(customer => <tr key={customer.id}>
                     <td>{customer.id}</td>
-                    <td>
-                        <NavLink to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</NavLink>
-                    </td>
+                    <td>{customer.firstName} {customer.lastName}</td>
+                    <td>{customer.user.email}</td>
                     <td>{customer.email}</td>
                     <td>{customer.company}</td>
                     <td className="text-center">
@@ -93,6 +93,8 @@ const CustomersPage = props => {
                     </td>
                     <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
                     <td>
+                        <NavLink className="btn btn-sm btn-primary mr-1"
+                                 to={"/customers/" + customer.id}>Modifier</NavLink>
                         <button className="btn btn-sm btn-danger" disabled={customer.invoices.length > 0}
                                 onClick={() => handleDelete(customer.id)}>
                             Supprimer
