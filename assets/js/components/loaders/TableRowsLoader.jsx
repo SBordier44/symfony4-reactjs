@@ -8,8 +8,8 @@ const TableRow = props => {
             height={40}
             width={1060}
             speed={2}
-            primaryColor="#d9d9d9"
-            secondaryColor="#ecebeb"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
             {...props}
         >
             <rect x="0" y="15" rx="4" ry="4" width="6" height="6.4"/>

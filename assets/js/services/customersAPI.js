@@ -1,30 +1,32 @@
 import axios from "axios";
+import {CUSTOMERS_API} from "../config";
 
 function findAll() {
     return axios
-        .get("/api/customers")
+        .get(CUSTOMERS_API)
         .then(response => response.data['hydra:member'])
 }
 
 function destroy(id) {
-    return axios.delete('/api/customers/' + id)
+    return axios
+        .delete(CUSTOMERS_API + '/' + id)
 }
 
 function find(id) {
     return axios
-        .get('/api/customers/' + id)
+        .get(CUSTOMERS_API + '/' + id)
         .then(response => response.data)
 }
 
 function edit(id, payload) {
     return axios
-        .put('/api/customers/' + id, payload)
+        .put(CUSTOMERS_API + '/' + id, payload)
         .then(response => response.data)
 }
 
 function create(payload) {
     return axios
-        .post('/api/customers', payload)
+        .post(CUSTOMERS_API, payload)
         .then(response => response.data)
 }
 
