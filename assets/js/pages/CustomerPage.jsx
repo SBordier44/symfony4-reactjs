@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import customersAPI from "../services/customersAPI";
+import {toast} from "react-toastify";
+import FormContentLoader from "../components/loaders/FormContentLoader";
 
 const CustomerPage = ({history, match}) => {
 
@@ -17,19 +19,23 @@ const CustomerPage = ({history, match}) => {
     const [customer, setCustomer] = useState(emptyCustomerModel)
     const [errors, setErrors] = useState(emptyCustomerModel)
     const [editing, setEditing] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const fetchCustomer = async id => {
         try {
             const {firstName, lastName, email, company} = await customersAPI.find(id)
             setCustomer({firstName, lastName, email, company})
+            setLoading(false)
         } catch (error) {
             console.error(error.response)
+            toast.error('Une erreur est survenue lors de la récupération du client 😒')
             history.replace('/customers')
         }
     }
 
     useEffect(() => {
         if (id !== "new") {
+            setLoading(true)
             setEditing(true)
             fetchCustomer(id)
         }
@@ -48,10 +54,10 @@ const CustomerPage = ({history, match}) => {
         try {
             if (editing) {
                 await customersAPI.edit(id, customer)
-                console.log('Client modifié')
+                toast.success('Client modifié avec succès')
             } else {
                 await customersAPI.create(customer)
-                console.log('Client Créé')
+                toast.success('Client créé avec succès')
                 history.replace('/customers')
             }
             setErrors(emptyCustomerModel)
@@ -66,13 +72,15 @@ const CustomerPage = ({history, match}) => {
             } else {
                 console.error(response)
             }
+            toast.error('Une erreur est survenue 😒')
         }
     }
 
     return (
         <>
             {editing && <h1>Modification d'un client</h1> || <h1>Création d'un client</h1>}
-            <form onSubmit={handleSubmit}>
+            {loading && <FormContentLoader/>}
+            {!loading && <form onSubmit={handleSubmit}>
                 <Field name="lastName"
                        label="Nom de famille"
                        placeholder="Nom de famille du client"
@@ -109,7 +117,7 @@ const CustomerPage = ({history, match}) => {
                     <button type="submit" className="btn btn-success">Enregistrer</button>
                     <Link to="/customers" className="btn btn-link">Retour à la liste</Link>
                 </div>
-            </form>
+            </form>}
         </>
     )
 }

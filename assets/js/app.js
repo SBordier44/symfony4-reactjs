@@ -14,6 +14,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CustomerPage from "./pages/CustomerPage";
 import InvoicePage from "./pages/InvoicePage";
 import RegisterPage from "./pages/RegisterPage";
+import {toast, ToastContainer} from "react-toastify";
 
 authAPI.setup()
 
@@ -43,6 +44,17 @@ const App = () => {
                     </Switch>
                 </main>
             </HashRouter>
+            <ToastContainer
+                position={toast.POSITION.TOP_CENTER}
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </AuthContext.Provider>
     )
 }

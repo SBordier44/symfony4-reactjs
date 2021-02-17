@@ -3,6 +3,8 @@ import Pagination from "../components/Pagination";
 import moment from 'moment'
 import invoicesAPI from '../services/invoicesAPI'
 import {Link, NavLink} from "react-router-dom";
+import {toast} from "react-toastify";
+import TableRowsLoader from "../components/loaders/TableRowsLoader";
 
 const STATUS_CLASSES = {
     PAID: 'success',
@@ -21,14 +23,17 @@ const InvoicesPage = props => {
     const [invoices, setInvoices] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [search, setSearch] = useState('')
+    const [loading, setLoading] = useState(true)
 
     const itemsPerPage = 10;
 
     const fetchInvoices = async () => {
         try {
             setInvoices(await invoicesAPI.fetchAll());
+            setLoading(false)
         } catch (error) {
             console.error(error.response)
+            toast.error('Une erreur est survenue lors de la récupération des factures 😒')
         }
     }
 
@@ -46,16 +51,21 @@ const InvoicesPage = props => {
     }
 
     const handleDestroy = async id => {
+        setLoading(true)
+
         const originalInvoices = [...invoices]
 
         setInvoices(invoices.filter(i => i.id !== id))
 
         try {
             await invoicesAPI.destroy(id)
-            console.log('Facture supprimée')
+            toast.success('Facture supprimée avec succès !')
+            setLoading(false)
         } catch (error) {
             console.error(error.response)
+            toast.error('Erreur lors de la suppresion de la facture')
             setInvoices(originalInvoices)
+            setLoading(false)
         }
     }
 
@@ -92,12 +102,13 @@ const InvoicesPage = props => {
                     <th/>
                 </tr>
                 </thead>
-                <tbody>
+                {!loading && (<tbody>
                 {paginatedInvoices.map(invoice =>
                     <tr key={invoice.id}>
                         <td>{invoice.chrono}</td>
                         <td>
-                            <NavLink to={"/customers/" + invoice.customer.id}>{invoice.customer.firstName} {invoice.customer.lastName}</NavLink>
+                            <NavLink
+                                to={"/customers/" + invoice.customer.id}>{invoice.customer.firstName} {invoice.customer.lastName}</NavLink>
                         </td>
                         <td>{formatDate(invoice.sentAt)}</td>
                         <td className="text-center">
@@ -107,17 +118,23 @@ const InvoicesPage = props => {
                         </td>
                         <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                         <td>
-                            <NavLink className="btn btn-sm btn-primary mr-1" to={"/invoices/" + invoice.id}>Modifier</NavLink>
+                            <NavLink className="btn btn-sm btn-primary mr-1"
+                                     to={"/invoices/" + invoice.id}>Modifier</NavLink>
                             <button className="btn btn-sm btn-danger" onClick={() => handleDestroy(invoice.id)}>
                                 Supprimer
                             </button>
                         </td>
                     </tr>
                 )}
-                </tbody>
+                </tbody>)}
             </table>
-            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} onPageChange={handlePageChange}
-                        length={filteredInvoices.length}/>
+
+            {loading && <TableRowsLoader/>}
+
+            {!loading && itemsPerPage < filteredInvoices.length && (
+                <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} onPageChange={handlePageChange}
+                            length={filteredInvoices.length}/>)
+            }
         </>
     )
 };

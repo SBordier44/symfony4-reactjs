@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import usersAPI from "../services/usersAPI";
+import {toast} from "react-toastify";
 
 const RegisterPage = ({history}) => {
 
@@ -30,12 +31,14 @@ const RegisterPage = ({history}) => {
         if (user.password !== user.passwordConfirm) {
             apiErrors.passwordConfirm = "Les mots de passe ne correspondent pas !"
             setErrors(apiErrors)
+            toast.error('Une erreur est survenue')
             return
         }
 
         try {
             await usersAPI.register(user)
             setErrors(emptyUserModel)
+            toast.success("Vous êtes maintenant inscrit ! 😄")
             history.replace('/login')
         } catch ({response}) {
             const {violations} = response.data
@@ -47,6 +50,7 @@ const RegisterPage = ({history}) => {
             } else {
                 console.error(response)
             }
+            toast.error('Une erreur est survenue')
         }
     }
 
